@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "nodemonConfig": {
+    "ext": "js",
+    "ignore": [
+      "*.test.ts",
+      "db/*"
+    ],
+    "delay": "2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index.js"
@@ -20,7 +28,8 @@
   "homepage": "https://github.com/PrinceMahdi/mahdi-shirmohammadi-brainflix-api#readme",
   "dependencies": {
     "axios": "^1.1.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
