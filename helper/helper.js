@@ -3,11 +3,12 @@ const fs = require("node:fs");
 const axios = require("axios");
 
 // <-------------------- API INFORMATION -------------------->
-const API_KEY = process.env.REACT_APP_API_KEY;
+const API_KEY = process.env.API_KEY;
 const URL = `https://project-2-api.herokuapp.com/videos?api_key=${API_KEY}`;
+const DETAILS_URL = `https://project-2-api.herokuapp.com/videos/84e96018-4022-434e-80bf-000ce4cd12b8?api_key=${API_KEY}`;
 
 /**
- * 
+ *
  * @returns a unique ID from the uuid module
  */
 const newId = () => {
@@ -24,19 +25,6 @@ const writeJSONFile = (filename, content) => {
     console.log(`Changes saves to: ${filename}.`);
   });
 };
-// <-------------------- AXIOS (GET) FOR FETCHING VIDEOS -------------------->
-axios.get(URL).then((response) => {
-  if (!fs.existsSync("data")) {
-    fs.mkdir("data", (error) => {
-      if (error) console.log("Error occured while creating the directory...");
-    });
-  }
-  fs.writeFile(`data/videos.json`, JSON.stringify(response.data), (error) => {
-    if (error) console.log("Error while writing to the file!");
-    console.log("Writing to the file was successful!");
-  });
-});
-// <-------------------- AXIOS (GET) FOR FETCHING VIDEOS DETAILS -------------------->
 
 // <-------------------- EXPORTING FUNCTIONS -------------------->
 module.exports = {

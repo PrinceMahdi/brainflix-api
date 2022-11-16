@@ -1,25 +1,37 @@
 // <-------------------- IMPORTS -------------------->
 const express = require("express");
-const axios = require("axios");
-const fs = require("node:fs");
 const path = require("node:path");
+const cors = require("cors");
 
-// <-------------------- API INFORMATION -------------------->
-const API_KEY = process.env.REACT_APP_API_KEY;
-const URL = `https://project-2-api.herokuapp.com/videos?api_key=${API_KEY}`;
+// <-------------------- FOR .env FILES -------------------->
+require("dotenv").config({ path: path.resolve(__dirname, "/.env") });
 
-// <-------------------- FUNCTION IMPORTS -------------------->
-const { newId, writeJSONFile } = require("./helper/helper");
+// <-------------------- ROUTES IMPORTS -------------------->
+const videoRouter = require("./routes/videos");
+const videoDetailsRouter = require("./routes/videoDetails");
 
 // <-------------------- INITIALIZE THE EXPRESS SERVER -------------------->
 const app = express();
 
+// <-------------------- MIDDLEWARE -------------------->
 app.use(express.json());
+app.use(cors());
+
+// <-------------------- SERVING ALL STATIC FILES -------------------->
 app.use(express.static(path.join(__dirname, "public")));
 
+// <-------------------- SERVING STATIC RESOURCES TO CLIENT -------------------->
+app.get("/", (_req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// <-------------------- ROUTES -------------------->
+// Videos Route
+app.use("/videos", videoRouter);
 
 
 // <-------------------- SERVER LISTENING FOR CHANGES -------------------->
-app.listen(8080, () => {
-  console.log("Server is running on port 8080!");
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`⭐️ ::: Server is running on port (${PORT}) ::: ⭐️`);
 });
