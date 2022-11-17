@@ -1,17 +1,17 @@
 // <-------------------- IMPORTS -------------------->
 const express = require("express");
-const path = require("node:path");
 const cors = require("cors");
+const path = require("node:path");
+
+// <------------------- INITIALIZE THE EXPRESS SERVER ------------------->
+const app = express();
 
 // <-------------------- FOR .env FILES -------------------->
-require("dotenv").config({ path: path.resolve(__dirname, "/.env") });
+require("dotenv").config();
 
 // <-------------------- ROUTES IMPORTS -------------------->
 const videoRouter = require("./routes/videos");
 const videoDetailsRouter = require("./routes/videoDetails");
-
-// <-------------------- INITIALIZE THE EXPRESS SERVER -------------------->
-const app = express();
 
 // <-------------------- MIDDLEWARE -------------------->
 app.use(express.json());
@@ -28,7 +28,6 @@ app.get("/", (_req, res) => {
 // <-------------------- ROUTES -------------------->
 // Videos Route
 app.use("/videos", videoRouter);
-
 
 // <-------------------- SERVER LISTENING FOR CHANGES -------------------->
 const PORT = process.env.PORT || 8080;
