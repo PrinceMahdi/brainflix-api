@@ -30,8 +30,18 @@ router.get("/:id", (req, res) => {
       });
 });
 // <-------------------- (POST) VIDEOS -------------------->
-router.post("/", (req, res) => {
-  const { title, description } = req.body;
+router.post("/post", (req, res) => {
+  const {
+    title,
+    description,
+    channel,
+    views,
+    likes,
+    timestamp,
+    image,
+    comments,
+  } = req.body;
+  
   if (!title || !description) {
     return res
       .status(400)
@@ -39,9 +49,15 @@ router.post("/", (req, res) => {
   }
 
   const newVideo = {
-    title,
-    description,
     id: newId(),
+    title,
+    channel,
+    views,
+    likes,
+    description,
+    timestamp,
+    image,
+    comments,
   };
 
   // Updateing the JSON file with the new video information
@@ -50,6 +66,41 @@ router.post("/", (req, res) => {
 
   // Responding to the client with the new video
   res.status(201).json(newVideo);
+});
+
+// <-------------------- (PATCH) VIDEOS -------------------->
+router.patch("/:id", (req, res) => {
+  const found = videoDetails.some((video) => video.id === req.params.id);
+  if (found) {
+    const updatedVideos = videoDetails.map((video) => {
+      video.id === req.params.id ? { ...video, ...req.body } : video;
+    });
+    writeJSONFile(videoDetailsJSONFile, updatedVideos);
+    res.json({ msg: "Video Updated: ", videoDetails: updatedVideos });
+  } else {
+    res.status(404).json({
+      error: `Video with ID ---[${req.params.id}]--- was not found`,
+    });
+  }
+});
+
+// <-------------------- (DELETE) VIDEOS -------------------->
+router.delete("/:id", (req, res) => {
+  const found = videoDetails.some((video) => video.id === req.params.id);
+  if (found) {
+    const videosAfterDeletion = videoDetails.filter((video) => {
+      video.id !== req.params.id;
+    });
+    writeJSONFile(videoDetailsJSONFile, videosAfterDeletion);
+    res.json({
+      msg: `::: Video with ID ${req.params.id} was Deleted :::`,
+      videos: videosAfterDeletion,
+    });
+  } else {
+    res.status(404).json({
+      error: `Video with ID ---[${req.params.id}]--- was not found`,
+    });
+  }
 });
 
 // <-------------------- EXPORTS -------------------->
