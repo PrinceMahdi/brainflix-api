@@ -19,6 +19,7 @@ router.get("/", (_req, res) => {
     console.log("::: Couldn't retrieve the videos :::", error);
   }
 });
+
 // <-------------------- (GET) ALL VIDEOS BY ID -------------------->
 router.get("/:id", (req, res) => {
   const found = videoDetails.find((video) => video.id === req.params.id);
@@ -41,7 +42,7 @@ router.post("/post", (req, res) => {
     image,
     comments,
   } = req.body;
-  
+
   if (!title || !description) {
     return res
       .status(400)
@@ -68,6 +69,45 @@ router.post("/post", (req, res) => {
   res.status(201).json(newVideo);
 });
 
+// <--------------------- (GET) ALL COMMENTS --------------------->
+router.get("/:id/comments", (req, res) => {
+  videoDetails.map((video) => {
+    if (video.id === req.params.id) {
+      res.status(200).json(video.comments);
+    }
+  });
+});
+
+// <-------------------- (POST) COMMENTS -------------------->
+router.post("/:id/comments", (req, res) => {
+  const { name, comment, likes, timestamp } = req.body;
+
+  if (!comment) {
+    return res
+      .status(400)
+      .json({ error: "Please be sure to provide a comment." });
+  }
+
+  const newComment = {
+    id: newId(),
+    name: "Elon Musk",
+    comment,
+    likes,
+    timestamp,
+  };
+
+  videoDetails.map((video) => {
+    if (video.id === req.params.id) {
+      // Updateing the JSON file with the new video information
+      video.comments.unshift(newComment);
+      writeJSONFile(videoDetailsJSONFile, videoDetails);
+
+      // Responding to the client with the new video
+      res.status(201).json(video);
+    }
+  });
+});
+
 // <-------------------- (PATCH) VIDEOS -------------------->
 router.patch("/:id", (req, res) => {
   const found = videoDetails.some((video) => video.id === req.params.id);
@@ -85,7 +125,7 @@ router.patch("/:id", (req, res) => {
 });
 
 // <-------------------- (DELETE) VIDEOS -------------------->
-router.delete("/:id", (req, res) => {
+router.delete("/:id/comments", (req, res) => {
   const found = videoDetails.some((video) => video.id === req.params.id);
   if (found) {
     const videosAfterDeletion = videoDetails.filter((video) => {
