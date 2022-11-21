@@ -108,40 +108,5 @@ router.post("/:id/comments", (req, res) => {
   });
 });
 
-// <-------------------- (PATCH) VIDEOS -------------------->
-router.patch("/:id", (req, res) => {
-  const found = videoDetails.some((video) => video.id === req.params.id);
-  if (found) {
-    const updatedVideos = videoDetails.map((video) => {
-      video.id === req.params.id ? { ...video, ...req.body } : video;
-    });
-    writeJSONFile(videoDetailsJSONFile, updatedVideos);
-    res.json({ msg: "Video Updated: ", videoDetails: updatedVideos });
-  } else {
-    res.status(404).json({
-      error: `Video with ID ---[${req.params.id}]--- was not found`,
-    });
-  }
-});
-
-// <-------------------- (DELETE) VIDEOS -------------------->
-router.delete("/:id/comments", (req, res) => {
-  const found = videoDetails.some((video) => video.id === req.params.id);
-  if (found) {
-    const videosAfterDeletion = videoDetails.filter((video) => {
-      video.id !== req.params.id;
-    });
-    writeJSONFile(videoDetailsJSONFile, videosAfterDeletion);
-    res.json({
-      msg: `::: Video with ID ${req.params.id} was Deleted :::`,
-      videos: videosAfterDeletion,
-    });
-  } else {
-    res.status(404).json({
-      error: `Video with ID ---[${req.params.id}]--- was not found`,
-    });
-  }
-});
-
 // <-------------------- EXPORTS -------------------->
 module.exports = router;

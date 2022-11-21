@@ -11,7 +11,6 @@ require("dotenv").config();
 
 // <-------------------- ROUTES IMPORTS -------------------->
 const videoRouter = require("./routes/videos");
-const videoDetailsRouter = require("./routes/videoDetails");
 
 // <-------------------- MIDDLEWARE -------------------->
 app.use(express.json());
