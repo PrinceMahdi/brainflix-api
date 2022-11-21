@@ -108,13 +108,14 @@ router.post("/:id/comments", (req, res) => {
   });
 });
 
-// <-------------------- (PATCH) VIDEOS -------------------->
-router.patch("/:id", (req, res) => {
+// <-------------------- (PUT) VIDEOS -------------------->
+router.put("/:id", (req, res) => {
   const found = videoDetails.some((video) => video.id === req.params.id);
+
   if (found) {
-    const updatedVideos = videoDetails.map((video) => {
-      video.id === req.params.id ? { ...video, ...req.body } : video;
-    });
+    const updatedVideos = videoDetails.map((video) =>
+      video.id === req.params.id ? { ...video, ...req.body } : video
+    );
     writeJSONFile(videoDetailsJSONFile, updatedVideos);
     res.json({ msg: "Video Updated: ", videoDetails: updatedVideos });
   } else {
@@ -125,12 +126,12 @@ router.patch("/:id", (req, res) => {
 });
 
 // <-------------------- (DELETE) VIDEOS -------------------->
-router.delete("/:id/comments", (req, res) => {
+router.delete("/:videoId/comments/:commentId", (req, res) => {
   const found = videoDetails.some((video) => video.id === req.params.id);
   if (found) {
-    const videosAfterDeletion = videoDetails.filter((video) => {
-      video.id !== req.params.id;
-    });
+    const videosAfterDeletion = videoDetails.filter(
+      (video) => video.id !== req.params.id
+    );
     writeJSONFile(videoDetailsJSONFile, videosAfterDeletion);
     res.json({
       msg: `::: Video with ID ${req.params.id} was Deleted :::`,
